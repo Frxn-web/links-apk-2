@@ -1,1 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Contenido</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Gris claro de fondo */
+        }
+        .dark body {
+            background-color: #111827; /* Gris oscuro para modo noche */
+        }
+        .card-link {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        /* Estilo para la barra de scroll */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="dark:bg-gray-900">
+
+    <div class="container mx-auto max-w-4xl p-4">
+        
+        <!-- Header -->
+        <header class="text-center my-8">
+            <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white">Centro de Recursos</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Tu portal de acceso a contenido y herramientas exclusivas.</p>
+        </header>
+
+        <!-- Search and Filter -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Buscar en los recursos..." class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+            <div id="category-filters" class="flex flex-wrap gap-2 justify-center mt-4">
+                <!-- Filtros de categoría se insertarán aquí -->
+            </div>
+        </div>
+
+        <!-- Links Grid -->
+        <main id="links-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Los enlaces se insertarán aquí dinámicamente -->
+        </main>
+        
+        <div id="no-results" class="hidden text-center py-16">
+            <p class="text-gray-500 dark:text-gray-400 text-lg">No se encontraron resultados.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const linksData = [
+            { title: 'Acceso Premium v1', description: 'Desbloquea contenido y funciones exclusivas con este acceso.', url: 'https://lemonpier.com/rp3s9s7e?key=346c6469ba315109149b972ab1e00458', icon: 'fa-star', category: 'Premium' },
+            { title: 'Herramienta de Productividad', description: 'Optimiza tu flujo de trabajo y mejora tu eficiencia diaria.', url: 'https://lemonpier.com/ye5f411rpd?key=37ef6e8a963b5459b25bfd139a99df7a', icon: 'fa-rocket', category: 'Herramientas' },
+            { title: 'Guía de Inversión', description: 'Aprende estrategias clave para hacer crecer tu capital de forma segura.', url: 'https://lemonpier.com/vdqaabnxva?key=7bd988136c1f477685bb5ba8f5d8c4d1', icon: 'fa-chart-line', category: 'Finanzas' },
+            { title: 'Curso de Marketing Digital', description: 'Domina las redes sociales y el SEO para potenciar tu negocio.', url: 'https://lemonpier.com/w5e25hgik6?key=018f2ec60e5c9dcdeb751cfe5d76b0c4', icon: 'fa-bullhorn', category: 'Educación' },
+            { title: 'Paquete de Diseño Gráfico', description: 'Plantillas y recursos para crear diseños impactantes sin esfuerzo.', url: 'https://lemonpier.com/ffcwf6x4?key=90222c7e1fb81ae891c59169e78d8017', icon: 'fa-palette', category: 'Creatividad' },
+            { title: 'Software de Edición Pro', description: 'Edita videos y fotos como un profesional con este potente software.', url: 'https://lemonpier.com/w4uftmhi99?key=3f2de7affcb37b202afe227b2ee5bb18', icon: 'fa-camera-retro', category: 'Herramientas' },
+            { title: 'Acceso VIP a Eventos', description: 'Consigue tu entrada a conferencias y eventos exclusivos en línea.', url: 'https://lemonpier.com/h7qu07uu8m?key=4d07622c35687c76783d5dd0c2a7e537', icon: 'fa-ticket', category: 'Premium' },
+            { title: 'Kit de Desarrollo Web', description: 'Todo lo que necesitas para empezar a construir tus propias páginas web.', url: 'https://lemonpier.com/t43a3v0pt?key=059607d8e60e255ecbd638f23791a1fc', icon: 'fa-code', category: 'Tecnología' },
+            { title: 'Plan de Fitness Personal', description: 'Alcanza tus metas de salud con un plan de ejercicios personalizado.', url: 'https://lemonpier.com/msbw44i7?key=2142286c513537ca962c0adcdae977a6', icon: 'fa-heart-pulse', category: 'Bienestar' },
+            { title: 'Recetas Gourmet Exclusivas', description: 'Sorprende a todos con platillos únicos y deliciosos.', url: 'https://lemonpier.com/yvtpmb71wg?key=ff1e87169656cf028a7cfb83615c5e63', icon: 'fa-utensils', category: 'Estilo de Vida' },
+            { title: 'Consultoría Financiera', description: 'Asesoría experta para organizar y optimizar tus finanzas personales.', url: 'https://lemonpier.com/ig83if28e?key=7a342260205a0804ef2a7f146405f489', icon: 'fa-sack-dollar', category: 'Finanzas' },
+            { title: 'Servicio de Nube Seguro', description: 'Almacena tus archivos importantes con la máxima seguridad y privacidad.', url: 'https://lemonpier.com/g5yjbj74?key=8aa0547413d8af5d43903200ef3e0348', icon: 'fa-cloud-arrow-up', category: 'Tecnología' },
+            { title: 'Acceso a Biblioteca Digital', description: 'Miles de libros y audiolibros disponibles en una sola suscripción.', url: 'https://lemonpier.com/g7109sqtm?key=8e9043817a2d3401e70d8894024c5a40', icon: 'fa-book-open-reader', category: 'Educación' },
+            { title: 'Generador de Ideas de Negocio', description: 'Encuentra inspiración y valida tu próximo gran proyecto.', url: 'https://lemonpier.com/qsm47ihjnp?key=cc0577b36cf04769fa3d87a6200a3980', icon: 'fa-lightbulb', category: 'Negocios' },
+            { title: 'Herramienta de Automatización', description: 'Ahorra tiempo automatizando tareas repetitivas en redes sociales.', url: 'https://lemonpier.com/r08q2jdnj?key=64a2a0a43a18f01b120b52b9a6547068', icon: 'fa-robot', category: 'Herramientas' },
+            { title: 'Curso de Oratoria y Liderazgo', description: 'Comunica tus ideas con impacto y lidera equipos con confianza.', url: 'https://lemonpier.com/uui45ce0?key=59bda7690a62eef529a3f5a66d67790f', icon: 'fa-user-tie', category: 'Educación' },
+            { title: 'Plantillas de CV Profesionales', description: 'Crea un currículum que destaque y consiga entrevistas.', url: 'https://lemonpier.com/gxmgbkcg?key=eca7f619accc957eaf9ec17536d322ac', icon: 'fa-file-lines', category: 'Negocios' },
+            { title: 'Servicio de VPN Rápido', description: 'Navega de forma anónima y segura sin sacrificar velocidad.', url: 'https://lemonpier.com/c4idq04r?key=27cdb26ac2cff77f30aa6e6fd73eb4ef', icon: 'fa-shield-halved', category: 'Tecnología' },
+            { title: 'Meditación Guiada y Mindfulness', description: 'Reduce el estrés y mejora tu concentración con sesiones guiadas.', url: 'https://lemonpier.com/jydr02b5aw?key=80d279994e12d1bfda77e130daab1046', icon: 'fa-om', category: 'Bienestar' },
+            { title: 'Curso de Fotografía Móvil', description: 'Toma fotos increíbles con el celular que ya tienes en tu bolsillo.', url: 'https://lemonpier.com/g8y0ya2j?key=3c612f008502e3c3d19d9a6be866e07c', icon: 'fa-mobile-screen-button', category: 'Creatividad' },
+            { title: 'Análisis de Redes Sociales', description: 'Descubre qué funciona en tus perfiles y cómo mejorar tu alcance.', url: 'https://lemonpier.com/emye1q07w?key=f4a2b9d3080f689ab76e535c9a5cc243', icon: 'fa-magnifying-glass-chart', category: 'Herramientas' }
+        ];
+
+        const linksGrid = document.getElementById('links-grid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFiltersContainer = document.getElementById('category-filters');
+        const noResultsDiv = document.getElementById('no-results');
+
+        // Función para renderizar los enlaces
+        const renderLinks = (linksToRender) => {
+            linksGrid.innerHTML = '';
+            if (linksToRender.length === 0) {
+                noResultsDiv.classList.remove('hidden');
+            } else {
+                noResultsDiv.classList.add('hidden');
+            }
+            linksToRender.forEach(link => {
+                const card = document.createElement('a');
+                card.href = link.url;
+                card.target = "_blank"; // Abre en una nueva pestaña
+                card.className = 'card-link block bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-lg dark:shadow-black/20 fade-in';
+                card.innerHTML = `
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 rounded-full mr-4">
+                            <i class="fas ${link.icon} text-indigo-500 dark:text-indigo-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-white">${link.title}</h3>
+                            <span class="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full font-medium">${link.category}</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">${link.description}</p>
+                `;
+                linksGrid.appendChild(card);
+            });
+        };
+
+        // Función para renderizar los filtros de categoría
+        const renderCategoryFilters = () => {
+            const categories = ['Todos', ...new Set(linksData.map(link => link.category))];
+            categoryFiltersContainer.innerHTML = '';
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.textContent = category;
+                button.className = 'category-filter-btn px-4 py-2 text-sm font-medium rounded-full transition-colors';
+                if (category === 'Todos') {
+                    button.classList.add('bg-indigo-600', 'text-white');
+                } else {
+                    button.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
+                }
+                button.dataset.category = category;
+                categoryFiltersContainer.appendChild(button);
+            });
+        };
+
+        // Función para filtrar y buscar
+        const filterAndSearch = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeCategory = document.querySelector('.category-filter-btn.bg-indigo-600').dataset.category;
+            
+            const filteredLinks = linksData.filter(link => {
+                const matchesCategory = activeCategory === 'Todos' || link.category === activeCategory;
+                const matchesSearch = link.title.toLowerCase().includes(searchTerm) || link.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+            
+            renderLinks(filteredLinks);
+        };
+
+        // Event Listeners
+        searchInput.addEventListener('input', filterAndSearch);
+
+        categoryFiltersContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('.category-filter-btn').forEach(btn => {
+                    btn.classList.remove('bg-indigo-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
+                });
+                e.target.classList.add('bg-indigo-600', 'text-white');
+                e.target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
+                filterAndSearch();
+            }
+        });
+
+        // Inicialización
+        renderCategoryFilters();
+        renderLinks(linksData);
+    </script>
+</body>
+</html>
 
